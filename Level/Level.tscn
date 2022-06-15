@@ -1,0 +1,146 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Opponent/Opponent.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Ball/Ball.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Level/Level.gd" type="Script" id=4]
+[ext_resource path="res://Assets/Fonts/PressStart2P-Regular.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://Assets/ping_pong_8bit_plop.ogg" type="AudioStream" id=6]
+[ext_resource path="res://Paddle/Paddle.tscn" type="PackedScene" id=7]
+
+[sub_resource type="DynamicFont" id=3]
+size = 40
+font_data = ExtResource( 5 )
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 95, 354.5 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 40
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 50
+font_data = ExtResource( 5 )
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 700.5, 10 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 29.5, 92 )
+
+[node name="Level" type="Node"]
+script = ExtResource( 4 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.0784314, 0.129412, 0.14902, 1 )
+__meta__ = {
+"_editor_description_": " "
+}
+
+[node name="PlayerScore" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -200.0
+custom_colors/font_color = Color( 0.85098, 0.847059, 0.843137, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Test"
+align = 1
+valign = 1
+
+[node name="LeftWall" type="StaticBody2D" parent="PlayerScore"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerScore/LeftWall"]
+position = Vector2( 85, 362.5 )
+shape = SubResource( 6 )
+
+[node name="RightWall" type="StaticBody2D" parent="PlayerScore"]
+position = Vector2( 1497, -2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerScore/RightWall"]
+position = Vector2( 85, 362.5 )
+shape = SubResource( 6 )
+
+[node name="OpponentScore" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 200.0
+custom_colors/font_color = Color( 0.85098, 0.847059, 0.843137, 1 )
+custom_fonts/font = SubResource( 4 )
+text = "Test"
+align = 1
+valign = 1
+
+[node name="CountdownLabel" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -300.0
+custom_colors/font_color = Color( 0.952941, 0.313726, 0.160784, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "countdown"
+align = 1
+valign = 1
+
+[node name="Opponent" parent="." instance=ExtResource( 2 )]
+position = Vector2( 1100, 297 )
+rotation = -3.14159
+scale = Vector2( 1, -1 )
+
+[node name="WallTop" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallTop"]
+position = Vector2( 608.5, -10 )
+shape = SubResource( 1 )
+
+[node name="WallBottom" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallBottom"]
+position = Vector2( 608.5, 733 )
+shape = SubResource( 1 )
+
+[node name="Ball" parent="." instance=ExtResource( 3 )]
+position = Vector2( 651, 357 )
+
+[node name="Left" type="Area2D" parent="."]
+position = Vector2( 57, -1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Left"]
+position = Vector2( -42.5, 360 )
+shape = SubResource( 2 )
+
+[node name="ColorRect" type="ColorRect" parent="Left"]
+margin_left = -66.0
+margin_top = 269.0
+margin_right = -14.0
+margin_bottom = 449.0
+color = Color( 0.988235, 1, 0.67451, 1 )
+
+[node name="Right" type="Area2D" parent="."]
+position = Vector2( 1310, -2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Right"]
+position = Vector2( -60, 359 )
+shape = SubResource( 2 )
+
+[node name="ColorRect2" type="ColorRect" parent="Right"]
+margin_left = -88.0
+margin_top = 268.0
+margin_right = -36.0
+margin_bottom = 448.0
+color = Color( 0.988235, 1, 0.67451, 1 )
+
+[node name="CountdownTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="ScoreSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+volume_db = -42.387
+
+[node name="Paddle" parent="." instance=ExtResource( 7 )]
+position = Vector2( 155, 344 )
+
+[connection signal="body_entered" from="Left" to="." method="_on_Left_body_entered"]
+[connection signal="body_entered" from="Right" to="." method="_on_Right_body_entered"]
+[connection signal="timeout" from="CountdownTimer" to="." method="_on_CountdownTimer_timeout"]
